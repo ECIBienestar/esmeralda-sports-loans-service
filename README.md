@@ -72,8 +72,11 @@ Here are the diagrams on which we base and base the architecture of the module's
 
 ### Class Diagram
 
-![](assets/diagrama_de_clases.png)
+![](assets/diagrama_de_clases2.png)
 
 ### Entity Relationship Diagram
 
 ![](assets/diagrama_entidad_relacion.png)
+
+## How to run the project
+
