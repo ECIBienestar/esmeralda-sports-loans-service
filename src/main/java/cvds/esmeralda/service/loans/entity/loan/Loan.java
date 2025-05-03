@@ -1,8 +1,8 @@
 package cvds.esmeralda.service.loans.entity.loan;
 
 import lombok.*;
-//import org.springframework.data.annotation.Id;
-//import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.lang.annotation.Documented;
 import java.time.LocalDateTime;
@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Builder
-//@Document(collection = "loans")
+@Document(collection = "loans")
 public class Loan {
+    @Id
     private String id;
     private String userName;
     private String userId;
