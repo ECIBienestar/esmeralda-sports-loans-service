@@ -23,5 +23,4 @@ public class Loan {
     private String loanStatus;
     private LocalDateTime dateAndTimeScheduleReturn;
     private String duration;
-
 }
