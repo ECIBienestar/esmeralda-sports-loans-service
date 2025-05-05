@@ -1,7 +1,5 @@
 package cvds.esmeralda.service.loans.controller;
 
-
-
 import cvds.esmeralda.service.loans.entity.loan.Loan;
 import cvds.esmeralda.service.loans.entity.equipment.Equipment;
 import cvds.esmeralda.service.loans.entity.loan.LoanDTO;
