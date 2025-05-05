@@ -64,19 +64,46 @@ Here are the diagrams on which we base and base the architecture of the module's
 
 ### Components Diagram
 
-![](assets/diagrama_de_componentes.png)
+![](assets/diagrama_de_componentes.jpeg)
 
 ### Data Diagram
     
-![](assets/diagrama_base_de_datos.png)
+![](assets/diagrama_base_de_datos.jpg)
 
 ### Class Diagram
 
-![](assets/diagrama_de_clases2.png)
-
-### Entity Relationship Diagram
-
-![](assets/diagrama_entidad_relacion.png)
+![](assets/diagrama_de_clases2.jpg)
 
 ## How to run the project
 
+## Actual Working Endpoints
+
+### Equipment
+
+ **Function**                 | **Description**                                                            | **URL**                                                                         |
+|------------------------------|----------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| Get all equipment            | Returns a list of all registered equipment.                                | GET http://localhost:8080/api/v1.0/equipment                                    |
+| Get equipment by ID          | Returns the details of a specific equipment item identified by its ID.     | GET http://localhost:8080/api/v1.0/equipment/6816caaed00fb27b12b48e1a           |
+| Get equipment by type        | Returns a list of all equipment of a specific type (e.g. SoccerBall).      | GET http://localhost:8080/api/v1.0/equipment/type/Audiovisual                   |
+| Check equipment availability | Returns whether the specified equipment is currently available for loan.   | GET http://localhost:8080/api/v1.0/equipment/6816caaed00fb27b12b48e1a/available |
+| Create new equipment         | Registers new equipment with the information provided in the request body. | POST http://localhost:8080/api/v1.0/equipment                                   |
+| Update equipment             | Updates the details of an existing equipment item using its ID.            | PUT http://localhost:8080/api/v1.0/equipment/6818097174d3d03170b7ebea           |
+| Delete equipment             | Deletes an equipment item based on its ID.                                 | DELETE http://localhost:8080/api/v1.0/equipment/12345                           |
+
+
+### Loans:
+
+ **Function**             | **Description**                                                | **URL**                                                              |
+|-------------------------|----------------------------------------------------------------|----------------------------------------------------------------------|
+| Get All Loans           | Returns a list of all registered loans.                        | GET http://localhost:8080/api/v1.0/loans                             |
+| Create a new loan       | Creates a new loan with the data provided in the request body. | POST http://localhost:8080/api/v1.0/loans                            |
+| Update an existing loan | Updates the information of an existing loan using its ID.      | PUT http://localhost:8080/api/v1.0/loans/12345                       |
+| Delete a loan           | Deletes a specific loan by its ID.                             | DELETE http://localhost:8080/api/v1.0/loans/6818216be8accf68632488ad |
+| Get a loan by ID        | Returns the details of a specific loan identified by its ID.   | GET http://localhost:8080/api/v1.0/loans/12345                       |
+| Get loans by user       | Lists all loans made by a specific user.                       | GET http://localhost:8080/api/v1.0/loans/user/1234                   |
+
+|**Consultar Disponibilidad** | Permite visualizar qué laboratorios están disponibles en una fecha y hora específicas. |
+|**Reservar Laboratorio** | Permite a los usuarios reservar un laboratorio indicando fecha, hora y propósito. |
+|**Cancelar Reserva** | Permite a los usuarios cancelar una reserva existente. |
+|**Validación de Reservas** | Evita reservas duplicadas en el mismo laboratorio, fecha y hora. |
+|**Notificación de Reserva** | Envía una confirmación al usuario tras realizar una reserva exitosa. |
