@@ -15,7 +15,7 @@ institutional resources.
 -	SpringBoot (Framework de desarrollo)
 -	Apache Maven (Herramienta de gestión de proyectos)
 -	Java OpenJDk 17.x.x (Lenguaje de programacion)
--	Junit (Pruebas de codigo)
+-	Junit & Mockito (Testing)
 -	Jacoco (Cobertura de pruebas sobre el codigo)
 -	SonarQube (Análisis de calidad de codigo)
 -	MongoDB (Base de datos)
