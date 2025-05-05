@@ -45,4 +45,28 @@ public class LoanController {
         return loanService.add(loan);
     }
 
+    @PutMapping("/{id}")
+    public Loan update(@RequestBody Loan loan, @PathVariable String id) {
+        return loanService.update(loan, id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable String id) {
+        loanService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Loan> getById(@PathVariable String id) {
+        return loanService.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Loan> getByUserId(@PathVariable String userId) {
+        return loanService.getByUserId(userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
