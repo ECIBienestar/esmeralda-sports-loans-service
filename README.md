@@ -80,7 +80,7 @@ Here are the diagrams on which we base and base the architecture of the module's
 
 ### Equipment
 
- **Function**                 | **Description**                                                            | **URL**                                                                         |
+ **Function**                  | **Description**                                                            | **URL**                                                                         |
 |------------------------------|----------------------------------------------------------------------------|---------------------------------------------------------------------------------|
 | Get all equipment            | Returns a list of all registered equipment.                                | GET http://localhost:8080/api/v1.0/equipment                                    |
 | Get equipment by ID          | Returns the details of a specific equipment item identified by its ID.     | GET http://localhost:8080/api/v1.0/equipment/6816caaed00fb27b12b48e1a           |
