@@ -19,6 +19,7 @@ institutional resources.
 -	Jacoco (Cobertura de pruebas sobre el codigo)
 -	SonarQube (Análisis de calidad de codigo)
 -	MongoDB (Base de datos)
+-   Swagger (Endpoint Documentation)
 
 ## Collaborators
 
@@ -90,6 +91,7 @@ Here are the diagrams on which we base and base the architecture of the module's
 | Update equipment             | Updates the details of an existing equipment item using its ID.            | PUT http://localhost:8080/api/v1.0/equipment/6818097174d3d03170b7ebea           |
 | Delete equipment             | Deletes an equipment item based on its ID.                                 | DELETE http://localhost:8080/api/v1.0/equipment/12345                           |
 
+![img.png](assets/swaggerEquipment.png)
 
 ### Loans:
 
@@ -101,3 +103,5 @@ Here are the diagrams on which we base and base the architecture of the module's
 | Delete a loan           | Deletes a specific loan by its ID.                             | DELETE http://localhost:8080/api/v1.0/loans/6818216be8accf68632488ad |
 | Get a loan by ID        | Returns the details of a specific loan identified by its ID.   | GET http://localhost:8080/api/v1.0/loans/12345                       |
 | Get loans by user       | Lists all loans made by a specific user.                       | GET http://localhost:8080/api/v1.0/loans/user/1234                   |
+
+![img.png](assets/swaggerLoan.png)
