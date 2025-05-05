@@ -19,7 +19,6 @@ public class Loan {
     private String userName;
     private String userId;
     private LocalDateTime dateAndTimeLoan;
-    private LocalDateTime dateAndTimeRepayment;
     private String loanStatus;
     private LocalDateTime dateAndTimeScheduleReturn;
     private String duration;

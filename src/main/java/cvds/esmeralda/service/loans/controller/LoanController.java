@@ -1,5 +1,7 @@
 package cvds.esmeralda.service.loans.controller;
 
+
+
 import cvds.esmeralda.service.loans.entity.loan.Loan;
 import cvds.esmeralda.service.loans.entity.equipment.Equipment;
 import cvds.esmeralda.service.loans.entity.loan.LoanDTO;
@@ -17,10 +19,12 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000","http://127.0.0.1:5500","http://localhost:5500"})
 @RequestMapping("/api/v1.0/loans")
 public class LoanController {
 
-    private final LoanService loanService;
+    @Autowired
+    private LoanService loanService;
 
     @Autowired
     public LoanController(LoanService loanService) {
@@ -34,13 +38,13 @@ public class LoanController {
      *         or an error message with HTTP status 500 (Internal Server Error) if an exception occurs.
      */
     @GetMapping
-    public ResponseEntity<?> getLoans() {
-        try {
-            List<Loan> loans = loanService.getLoans();
-            return ResponseEntity.ok(loans);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.singletonMap("error", e.getMessage()));
-        }
+    public List<Loan> getAll() {
+        return loanService.getAll();
     }
+
+    @PostMapping
+    public Loan add(@RequestBody Loan loan) {
+        return loanService.add(loan);
+    }
+
 }
