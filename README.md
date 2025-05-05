@@ -18,7 +18,7 @@ institutional resources.
 -	Junit (Pruebas de codigo)
 -	Jacoco (Cobertura de pruebas sobre el codigo)
 -	SonarQube (Análisis de calidad de codigo)
--	PostGreSQL(Base de datos)
+-	MongoDB (Base de datos)
 
 ## Collaborators
 
@@ -101,9 +101,3 @@ Here are the diagrams on which we base and base the architecture of the module's
 | Delete a loan           | Deletes a specific loan by its ID.                             | DELETE http://localhost:8080/api/v1.0/loans/6818216be8accf68632488ad |
 | Get a loan by ID        | Returns the details of a specific loan identified by its ID.   | GET http://localhost:8080/api/v1.0/loans/12345                       |
 | Get loans by user       | Lists all loans made by a specific user.                       | GET http://localhost:8080/api/v1.0/loans/user/1234                   |
-
-|**Consultar Disponibilidad** | Permite visualizar qué laboratorios están disponibles en una fecha y hora específicas. |
-|**Reservar Laboratorio** | Permite a los usuarios reservar un laboratorio indicando fecha, hora y propósito. |
-|**Cancelar Reserva** | Permite a los usuarios cancelar una reserva existente. |
-|**Validación de Reservas** | Evita reservas duplicadas en el mismo laboratorio, fecha y hora. |
-|**Notificación de Reserva** | Envía una confirmación al usuario tras realizar una reserva exitosa. |
