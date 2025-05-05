@@ -105,3 +105,7 @@ Here are the diagrams on which we base and base the architecture of the module's
 | Get loans by user       | Lists all loans made by a specific user.                       | GET http://localhost:8080/api/v1.0/loans/user/1234                   |
 
 ![img.png](assets/swaggerLoan.png)
+
+## Coverage:
+
+![img.png](assets/jacoco.png)
