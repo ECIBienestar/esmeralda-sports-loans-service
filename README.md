@@ -65,17 +65,41 @@ Here are the diagrams on which we base and base the architecture of the module's
 
 ### Components Diagram
 
-![](assets/diagrama_de_componentes.jpeg)
+![](assets/diagrama_de_componentes.png)
+
+Se tienen las clases de equipment, user y loan las cuales representan la lógica de nuestro de negocio de préstamos, donde tenemos la información de cada objeto en equipment y se diferencian por tipos, por otro lado, las loan tienen referencia a que objeto se le hizo préstamo y los diferentes datos necesarios para la realización y control del préstamo.
 
 ### Data Diagram
     
-![](assets/diagrama_base_de_datos.jpg)
+![](assets/diagrama_de_datos.png)
+
+Se tienen 2 colecciones en las cuales una tiene referencia a la otra entidad y embebida otro tipo de dato, se puede apreciar que esto nos permite una búsqueda de datos del usuario por reserva mucho más rápida lo cual es algo muy importante puesto que es una de las consultas mas frecuentes junto con la creación de reservas.
 
 ### Class Diagram
 
-![](assets/diagrama_de_clases2.jpg)
+![](assets/diagrama_de_clases.png)
+
+En este diagrama podemos ver las clases de nuestros datos, como se relacionan entre estos y los servicios, controladores y repositorios necesarios para poder realizar la lógica del negocio, la persistencia con la base de datos y el correcto funcionamiento de las solicitudes http a través del servicio rest, que es utilizado gracias a springboot.
 
 ## How to run the project
+
+1. Clone the repository
+   ```bash
+   git clone link_github
+   cd repaso
+   ```
+
+2. Configure conexion with database: `application.properties`:
+   ```properties
+   spring.data.mongodb.uri=mongodb+srv://username:password@cluster.mongodb.net/
+   spring.data.mongodb.database=Cluster0
+   ```
+
+3. Construir y correr la app:
+   ```bash
+   mvn clean install
+   mvn spring-boot:run
+   ```
 
 ## Actual Working Endpoints
 
