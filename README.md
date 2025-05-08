@@ -95,7 +95,7 @@ In this diagram we can see the classes of our data, how they relate to each othe
    spring.data.mongodb.database=Cluster0
    ```
 
-3. Construir y correr la app:
+3. Build and run the app:
    ```bash
    mvn clean install
    mvn spring-boot:run
@@ -132,4 +132,12 @@ In this diagram we can see the classes of our data, how they relate to each othe
 
 ## Coverage:
 
+
+Below is the evidence of the code coverage in terms of tests provided by jacoco, the tests were done only on the module services since these are the most important.
+
 ![img.png](assets/jacoco.png)
+
+
+We also have static analysis of the code which allows us to audit the code, thus knowing vulnerabilities, problems in the code and the coverage of the tests as previously seen in Jacoco.
+
+![img.png](assets/sonarqube.png )
