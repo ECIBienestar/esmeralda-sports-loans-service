@@ -2,8 +2,12 @@ package cvds.esmeralda.service.loans.controller;
 
 import cvds.esmeralda.service.loans.entity.equipment.Equipment;
 import cvds.esmeralda.service.loans.service.EquipmentService;
+
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +27,10 @@ public class EquipmentController {
             summary = "Get all equipment",
             description = "Retrieve a list of all available equipment"
     )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Equipment list retrieved successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping
     public List<Equipment> getAll() {
         return equipmentService.getAll();
@@ -30,10 +38,16 @@ public class EquipmentController {
 
     @Operation(
             summary = "Get equipment by ID",
-            description = "Retrieve detailed information about a specific equipment item by its ID"
+            description = "Retrieve detailed information about a specific equipment item by its ID (in header)"
     )
-    @GetMapping("/{id}")
-    public ResponseEntity<Equipment> getById(@PathVariable String id) {
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Equipment retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid equipment ID"),
+            @ApiResponse(responseCode = "404", description = "Equipment not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/id")
+    public ResponseEntity<Equipment> getById(@RequestHeader("equipment-id") String id) {
         return equipmentService.getById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -41,19 +55,30 @@ public class EquipmentController {
 
     @Operation(
             summary = "Get equipment by type",
-            description = "Retrieve all equipment items filtered by a specific type (e.g. Audiovisual, Sports)"
+            description = "Retrieve all equipment items filtered by a specific type (in header)"
     )
-    @GetMapping("/type/{type}")
-    public List<Equipment> getByType(@PathVariable String type) {
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Equipment list retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid equipment type"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/type")
+    public List<Equipment> getByType(@RequestHeader("equipment-type") String type) {
         return equipmentService.getByType(type);
     }
 
     @Operation(
             summary = "Check availability by ID",
-            description = "Check if a specific equipment item is currently available"
+            description = "Check if a specific equipment item is currently available (ID in header)"
     )
-    @GetMapping("/{id}/available")
-    public ResponseEntity<Boolean> getAvailableById(@PathVariable String id) {
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Availability status retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid equipment ID"),
+            @ApiResponse(responseCode = "404", description = "Equipment not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/available")
+    public ResponseEntity<Boolean> getAvailableById(@RequestHeader("equipment-id") String id) {
         Boolean available = equipmentService.getAvailableById(id);
         return (available != null)
                 ? ResponseEntity.ok(available)
@@ -64,6 +89,11 @@ public class EquipmentController {
             summary = "Register new equipment",
             description = "Add a new equipment item to the inventory"
     )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Equipment registered successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid equipment data"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @PostMapping
     public Equipment add(@RequestBody Equipment equipment) {
         return equipmentService.add(equipment);
@@ -71,19 +101,31 @@ public class EquipmentController {
 
     @Operation(
             summary = "Update equipment",
-            description = "Update the information of an existing equipment item by its ID"
+            description = "Update the information of an existing equipment item (ID in header)"
     )
-    @PutMapping("/{id}")
-    public Equipment update(@RequestBody Equipment equipment, @PathVariable String id) {
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Equipment updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid equipment ID or data"),
+            @ApiResponse(responseCode = "404", description = "Equipment not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PutMapping
+    public Equipment update(@RequestBody Equipment equipment, @RequestHeader("equipment-id") String id) {
         return equipmentService.update(equipment, id);
     }
 
     @Operation(
             summary = "Delete equipment",
-            description = "Remove an equipment item from the inventory using its ID"
+            description = "Remove an equipment item from the inventory (ID in header)"
     )
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable String id) {
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Equipment deleted successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid equipment ID"),
+            @ApiResponse(responseCode = "404", description = "Equipment not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @DeleteMapping
+    public ResponseEntity<Void> deleteById(@RequestHeader("equipment-id") String id) {
         equipmentService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
