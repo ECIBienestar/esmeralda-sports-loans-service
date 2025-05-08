@@ -12,13 +12,13 @@ institutional resources.
 
 ## Technologies Used
 
--	SpringBoot (Framework de desarrollo)
--	Apache Maven (Herramienta de gestión de proyectos)
--	Java OpenJDk 17.x.x (Lenguaje de programacion)
+-	SpringBoot (Development Framework)
+-	Apache Maven (Project management tool)
+-	Java OpenJDk 17.x.x (Programming Language)
 -	Junit & Mockito (Testing)
--	Jacoco (Cobertura de pruebas sobre el codigo)
--	SonarQube (Análisis de calidad de codigo)
--	MongoDB (Base de datos)
+-	Jacoco (Test coverage of the code)
+-	SonarQube (Code quality analysis)
+-	MongoDB (Datbase)
 -   Swagger (Endpoint Documentation)
 
 ## Collaborators
@@ -67,19 +67,19 @@ Here are the diagrams on which we base and base the architecture of the module's
 
 ![](assets/diagrama_de_componentes.png)
 
-Se tienen las clases de equipment, user y loan las cuales representan la lógica de nuestro de negocio de préstamos, donde tenemos la información de cada objeto en equipment y se diferencian por tipos, por otro lado, las loan tienen referencia a que objeto se le hizo préstamo y los diferentes datos necesarios para la realización y control del préstamo.
+There are the equipment, user and loan classes which represent the logic of our loan business, where we have the information of each object in equipment and are differentiated by type, on the other hand, the loan have reference to which object was loaned and the different data necessary for the realization and control of the loan.
 
 ### Data Diagram
     
 ![](assets/diagrama_de_datos.png)
 
-Se tienen 2 colecciones en las cuales una tiene referencia a la otra entidad y embebida otro tipo de dato, se puede apreciar que esto nos permite una búsqueda de datos del usuario por reserva mucho más rápida lo cual es algo muy importante puesto que es una de las consultas mas frecuentes junto con la creación de reservas.
+There are 2 collections in which one has a reference to the other entity and another type of data is embedded. It can be seen that this allows us to search for user data per reservation much faster, which is very important since it is one of the most frequent queries along with the creation of reservations.
 
 ### Class Diagram
 
 ![](assets/diagrama_de_clases.png)
 
-En este diagrama podemos ver las clases de nuestros datos, como se relacionan entre estos y los servicios, controladores y repositorios necesarios para poder realizar la lógica del negocio, la persistencia con la base de datos y el correcto funcionamiento de las solicitudes http a través del servicio rest, que es utilizado gracias a springboot.
+In this diagram we can see the classes of our data, how they relate to each other and the services, controllers and repositories necessary to be able to carry out the business logic, persistence with the database and the correct functioning of the http applications through the rest service, which is used thanks to  springboot.
 
 ## How to run the project
 
