@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class Loan {
     @Id
     private String id;
+    private String equipmentId;
     private String userName;
     private String userId;
     private LocalDateTime dateAndTimeLoan;
@@ -30,6 +31,14 @@ public class Loan {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getEquipmentId() {
+        return equipmentId;
+    }
+
+    public void setEquipmentId(String equipmentId) {
+        this.equipmentId = equipmentId;
     }
 
     public String getUserName() {

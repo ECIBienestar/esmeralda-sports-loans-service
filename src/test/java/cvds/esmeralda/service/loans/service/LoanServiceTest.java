@@ -1,6 +1,7 @@
 package cvds.esmeralda.service.loans.service;
 
 import cvds.esmeralda.service.loans.entity.loan.Loan;
+import cvds.esmeralda.service.loans.exception.LoanException;
 import cvds.esmeralda.service.loans.repository.LoanRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,10 +10,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class LoanServiceTest {
@@ -29,19 +32,19 @@ public class LoanServiceTest {
     void setUp() {
         loan = new Loan();
         loan.setId("123");
+        loan.setEquipmentId("equipment123");
         loan.setUserId("user123");
-        // Agrega otros campos necesarios si existen en la clase Loan.
     }
 
     @Test
     void testGetAll() {
-        Mockito.when(loanRepository.findAll()).thenReturn(List.of(loan));
+        when(loanRepository.findAll()).thenReturn(List.of(loan));
         assertEquals(1, loanService.getAll().size());
     }
 
     @Test
     void testAdd() {
-        Mockito.when(loanRepository.save(Mockito.any(Loan.class))).thenReturn(loan);
+        when(loanRepository.save(Mockito.any(Loan.class))).thenReturn(loan);
         Loan result = loanService.add(loan);
         assertNotNull(result);
         assertEquals("123", result.getId());
@@ -52,7 +55,7 @@ public class LoanServiceTest {
         Loan updatedLoan = new Loan();
         updatedLoan.setId("123");
         updatedLoan.setUserId("user123");
-        Mockito.when(loanRepository.save(Mockito.any(Loan.class))).thenReturn(updatedLoan);
+        when(loanRepository.save(Mockito.any(Loan.class))).thenReturn(updatedLoan);
         Loan result = loanService.update(updatedLoan, "123");
         assertNotNull(result);
         assertEquals("123", result.getId());
@@ -62,22 +65,78 @@ public class LoanServiceTest {
     void testDeleteById() {
         Mockito.doNothing().when(loanRepository).deleteById("123");
         loanService.deleteById("123");
-        Mockito.verify(loanRepository, Mockito.times(1)).deleteById("123");
+        verify(loanRepository, Mockito.times(1)).deleteById("123");
     }
 
     @Test
     void testGetById() {
-        Mockito.when(loanRepository.findById("123")).thenReturn(Optional.of(loan));
+        when(loanRepository.findById("123")).thenReturn(Optional.of(loan));
         Optional<Loan> result = loanService.getById("123");
         assertTrue(result.isPresent());
         assertEquals("123", result.get().getId());
     }
 
     @Test
+    void testGetByEquipmentId() {
+        when(loanRepository.findByEquipmentId("equipment123")).thenReturn(List.of(loan));
+
+        List<Loan> result = loanService.getByEquipmentId("equipment123");
+
+        assertFalse(result.isEmpty());
+        assertEquals("equipment123", result.get(0).getEquipmentId());
+    }
+
+
+    @Test
     void testGetByUserId() {
-        Mockito.when(loanRepository.findByUserId("user123")).thenReturn(Optional.of(loan));
-        Optional<Loan> result = loanService.getByUserId("user123");
-        assertTrue(result.isPresent());
-        assertEquals("user123", result.get().getUserId());
+        when(loanRepository.findByUserId("user123")).thenReturn(List.of(loan));
+
+        List<Loan> result = loanService.getByUserId("user123");
+
+        assertFalse(result.isEmpty());
+        assertEquals("user123", result.get(0).getUserId());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenLoanOverlaps() {
+        Loan loan = new Loan();
+        loan.setId("loan1");
+        loan.setEquipmentId("eq1");
+        loan.setDateAndTimeLoan(LocalDateTime.of(2025, 5, 5, 13, 0));
+        loan.setDateAndTimeScheduleReturn(LocalDateTime.of(2025, 5, 5, 15, 0));
+
+        Loan existingLoan = new Loan();
+        existingLoan.setId("loan2");
+        existingLoan.setEquipmentId("eq1");
+        existingLoan.setDateAndTimeLoan(LocalDateTime.of(2025, 5, 5, 14, 0));
+        existingLoan.setDateAndTimeScheduleReturn(LocalDateTime.of(2025, 5, 5, 16, 0));
+
+        when(loanRepository.findByEquipmentId("eq1")).thenReturn(List.of(existingLoan));
+
+        assertThrows(LoanException.class, () -> loanService.add(loan));
+        verify(loanRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldSaveLoanWhenNoOverlap() {
+        Loan loan = new Loan();
+        loan.setId("loan1");
+        loan.setEquipmentId("eq1");
+        loan.setDateAndTimeLoan(LocalDateTime.of(2025, 5, 5, 10, 0));
+        loan.setDateAndTimeScheduleReturn(LocalDateTime.of(2025, 5, 5, 12, 0));
+
+        Loan existingLoan = new Loan();
+        existingLoan.setId("loan2");
+        existingLoan.setEquipmentId("eq1");
+        existingLoan.setDateAndTimeLoan(LocalDateTime.of(2025, 5, 5, 13, 0));
+        existingLoan.setDateAndTimeScheduleReturn(LocalDateTime.of(2025, 5, 5, 14, 0));
+
+        when(loanRepository.findByEquipmentId("eq1")).thenReturn(List.of(existingLoan));
+        when(loanRepository.save(any(Loan.class))).thenReturn(loan);
+
+        Loan result = loanService.add(loan);
+
+        assertNotNull(result);
+        assertEquals("loan1", result.getId());
     }
 }

@@ -5,9 +5,12 @@ import org.springframework.stereotype.Repository;
 
 import cvds.esmeralda.service.loans.entity.loan.Loan;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface LoanRepository extends MongoRepository<Loan, String> {
-    Optional<Loan> findByUserId(String userId);
+    List<Loan> findByUserId(String userId);
+
+    List<Loan> findByEquipmentId(String equipmentId);
 }
