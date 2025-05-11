@@ -109,8 +109,8 @@ public class LoanController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Loans retrieved successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid user ID"),
-            @ApiResponse(responseCode = "404", description = "User or loans not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid equipment ID"),
+            @ApiResponse(responseCode = "404", description = "Equipment or loans not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/equipment")
