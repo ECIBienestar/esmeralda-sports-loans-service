@@ -23,7 +23,15 @@ public class LoanService {
 
     public List<Loan> getAll(){return loanRepository.findAll();}
 
-    public Loan add(Loan loan){
+    //public Loan add(Loan loan){
+    //    return loanRepository.save(loan);
+    //}
+
+    public Loan add(Loan loan) {
+        List<Loan> existingLoans = loanRepository.findByEquipmentId(loan.getEquipmentId());
+        if (isOverlapping(loan.getDateAndTimeLoan(), loan.getDateAndTimeScheduleReturn(), existingLoans)) {
+            throw new LoanException("Conflicting reservation: overlapping times for the same equipment.");
+        }
         return loanRepository.save(loan);
     }
 
@@ -38,6 +46,24 @@ public class LoanService {
 
     public Optional<Loan> getById(String id){return loanRepository.findById(id);}
 
-    public Optional<Loan> getByUserId(String userId){return loanRepository.findByUserId(userId);}
+    public List<Loan> getByEquipmentId(String equipmentId){return loanRepository.findByEquipmentId(equipmentId);}
 
+    public List<Loan> getByUserId(String userId){return loanRepository.findByUserId(userId);}
+
+    /**
+     * Verifies if the start and end dates of a new loans overlaps with an existing one.
+     * @param newStart Start date of the new Loan
+     * @param newEnd End date of the new Loan
+     * @param existingLoans All existing Loans
+     * @return true if overlaps, false otherwhise
+     */
+    private boolean isOverlapping(LocalDateTime newStart, LocalDateTime newEnd, List<Loan> existingLoans) {
+        for (Loan existing : existingLoans) {
+            LocalDateTime existingStart = existing.getDateAndTimeLoan();
+            LocalDateTime existingEnd = existing.getDateAndTimeScheduleReturn();
+            boolean overlap = !newStart.isAfter(existingEnd) && !newEnd.isBefore(existingStart);
+            if (overlap) return true;
+        }
+        return false;
+    }
 }

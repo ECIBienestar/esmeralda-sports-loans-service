@@ -104,6 +104,25 @@ public class LoanController {
     }
 
     @Operation(
+            summary = "Get loans by equipment ID",
+            description = "Retrieve all loans associated with a specific equipment, provided in the request header"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Loans retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid user ID"),
+            @ApiResponse(responseCode = "404", description = "User or loans not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/equipment")
+    public ResponseEntity<List<Loan>> getByEquipmentId(@RequestHeader("equipment-id") String equipmentId) {
+        List<Loan> loans = loanService.getByEquipmentId(equipmentId);
+        if (loans.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(loans);
+    }
+
+    @Operation(
             summary = "Get loans by user ID",
             description = "Retrieve all loans associated with a specific user, provided in the request header"
     )
@@ -114,9 +133,11 @@ public class LoanController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/user")
-    public ResponseEntity<Loan> getByUserId(@RequestHeader("user-id") String userId) {
-        return loanService.getByUserId(userId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<List<Loan>> getByUserId(@RequestHeader("user-id") String userId) {
+        List<Loan> loans = loanService.getByUserId(userId);
+        if (loans.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(loans);
     }
 }
