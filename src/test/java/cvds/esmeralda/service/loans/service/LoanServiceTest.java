@@ -188,4 +188,47 @@ public class LoanServiceTest {
 
         assertThrows(LoanException.class, () -> loanService.add(loan));
     }
+
+    @Test
+    void testGetActiveLoansByUserId() {
+        Loan activeLoan = new Loan();
+        activeLoan.setId("L1");
+        activeLoan.setUserId("U123");
+        activeLoan.setLoanStatus("EN_PRESTAMO");
+
+        Loan returnedLoan = new Loan();
+        returnedLoan.setId("L2");
+        returnedLoan.setUserId("U123");
+        returnedLoan.setLoanStatus("ENTREGADO");
+
+        when(loanRepository.findByUserId("U123")).thenReturn(List.of(activeLoan, returnedLoan));
+
+        List<Loan> result = loanService.getActiveLoansByUserId("U123");
+
+        assertEquals(1, result.size());
+        assertEquals("L1", result.get(0).getId());
+        assertEquals("EN_PRESTAMO", result.get(0).getLoanStatus());
+    }
+
+    @Test
+    void testGetReturnedLoansByUserId() {
+        Loan activeLoan = new Loan();
+        activeLoan.setId("L1");
+        activeLoan.setUserId("U123");
+        activeLoan.setLoanStatus("EN_PRESTAMO");
+
+        Loan returnedLoan = new Loan();
+        returnedLoan.setId("L2");
+        returnedLoan.setUserId("U123");
+        returnedLoan.setLoanStatus("ENTREGADO");
+
+        when(loanRepository.findByUserId("U123")).thenReturn(List.of(activeLoan, returnedLoan));
+
+        List<Loan> result = loanService.getReturnedLoansByUserId("U123");
+
+        assertEquals(1, result.size());
+        assertEquals("L2", result.get(0).getId());
+        assertEquals("ENTREGADO", result.get(0).getLoanStatus());
+    }
+
 }
