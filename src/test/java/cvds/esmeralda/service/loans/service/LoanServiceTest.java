@@ -34,6 +34,8 @@ public class LoanServiceTest {
         loan.setId("123");
         loan.setEquipmentId("equipment123");
         loan.setUserId("user123");
+        loan.setDateAndTimeLoan(LocalDateTime.of(2026, 5, 5, 13, 0));
+        loan.setDateAndTimeScheduleReturn(LocalDateTime.of(2026, 5, 5, 13, 0));
     }
 
     @Test
@@ -102,14 +104,14 @@ public class LoanServiceTest {
         Loan loan = new Loan();
         loan.setId("loan1");
         loan.setEquipmentId("eq1");
-        loan.setDateAndTimeLoan(LocalDateTime.of(2025, 5, 5, 13, 0));
-        loan.setDateAndTimeScheduleReturn(LocalDateTime.of(2025, 5, 5, 15, 0));
+        loan.setDateAndTimeLoan(LocalDateTime.of(2026, 5, 5, 13, 0));
+        loan.setDateAndTimeScheduleReturn(LocalDateTime.of(2026, 5, 5, 15, 0));
 
         Loan existingLoan = new Loan();
         existingLoan.setId("loan2");
         existingLoan.setEquipmentId("eq1");
-        existingLoan.setDateAndTimeLoan(LocalDateTime.of(2025, 5, 5, 14, 0));
-        existingLoan.setDateAndTimeScheduleReturn(LocalDateTime.of(2025, 5, 5, 16, 0));
+        existingLoan.setDateAndTimeLoan(LocalDateTime.of(2026, 5, 5, 14, 0));
+        existingLoan.setDateAndTimeScheduleReturn(LocalDateTime.of(2026, 5, 5, 16, 0));
 
         when(loanRepository.findByEquipmentId("eq1")).thenReturn(List.of(existingLoan));
 
@@ -122,14 +124,14 @@ public class LoanServiceTest {
         Loan loan = new Loan();
         loan.setId("loan1");
         loan.setEquipmentId("eq1");
-        loan.setDateAndTimeLoan(LocalDateTime.of(2025, 5, 5, 10, 0));
-        loan.setDateAndTimeScheduleReturn(LocalDateTime.of(2025, 5, 5, 12, 0));
+        loan.setDateAndTimeLoan(LocalDateTime.of(2026, 5, 5, 10, 0));
+        loan.setDateAndTimeScheduleReturn(LocalDateTime.of(2026, 5, 5, 12, 0));
 
         Loan existingLoan = new Loan();
         existingLoan.setId("loan2");
         existingLoan.setEquipmentId("eq1");
-        existingLoan.setDateAndTimeLoan(LocalDateTime.of(2025, 5, 5, 13, 0));
-        existingLoan.setDateAndTimeScheduleReturn(LocalDateTime.of(2025, 5, 5, 14, 0));
+        existingLoan.setDateAndTimeLoan(LocalDateTime.of(2026, 5, 5, 13, 0));
+        existingLoan.setDateAndTimeScheduleReturn(LocalDateTime.of(2026, 5, 5, 14, 0));
 
         when(loanRepository.findByEquipmentId("eq1")).thenReturn(List.of(existingLoan));
         when(loanRepository.save(any(Loan.class))).thenReturn(loan);
@@ -138,5 +140,52 @@ public class LoanServiceTest {
 
         assertNotNull(result);
         assertEquals("loan1", result.getId());
+    }
+
+    @Test
+    void shouldSaveLoanWhenOverlapsWithDifferentEquipmentId() {
+        Loan loan = new Loan();
+        loan.setId("loan1");
+        loan.setEquipmentId("eq1");
+        loan.setDateAndTimeLoan(LocalDateTime.of(2026, 5, 5, 13, 0));
+        loan.setDateAndTimeScheduleReturn(LocalDateTime.of(2026, 5, 5, 15, 0));
+
+        Loan existingLoan = new Loan();
+        existingLoan.setId("loan2");
+        existingLoan.setEquipmentId("eq2");
+        existingLoan.setDateAndTimeLoan(LocalDateTime.of(2026, 5, 5, 14, 0));
+        existingLoan.setDateAndTimeScheduleReturn(LocalDateTime.of(2026, 5, 5, 16, 0));
+
+        when(loanRepository.findByEquipmentId("eq1")).thenReturn(List.of(existingLoan));
+        when(loanRepository.save(any(Loan.class))).thenReturn(loan);
+
+        Loan result = loanService.add(loan);
+
+        assertNotNull(result);
+        assertEquals("loan1", result.getId());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenReturnDateIsDifferentDay() {
+        loan.setDateAndTimeLoan(LocalDateTime.of(2026, 5, 11, 10, 0));
+        loan.setDateAndTimeScheduleReturn(LocalDateTime.of(2026, 5, 12, 12, 0));
+
+        assertThrows(LoanException.class, () -> loanService.add(loan));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenStartAfterReturn() {
+        loan.setDateAndTimeLoan(LocalDateTime.of(2026, 5, 12, 14, 0));
+        loan.setDateAndTimeScheduleReturn(LocalDateTime.of(2026, 5, 12, 10, 0));
+
+        assertThrows(LoanException.class, () -> loanService.add(loan));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenLoanDateIsInPast() {
+        loan.setDateAndTimeLoan(LocalDateTime.now().minusDays(1));
+        loan.setDateAndTimeScheduleReturn(LocalDateTime.now().plusHours(1));
+
+        assertThrows(LoanException.class, () -> loanService.add(loan));
     }
 }
