@@ -21,16 +21,24 @@ public class LoanService {
     @Autowired
     private LoanRepository loanRepository;
 
-    public List<Loan> getAll(){return loanRepository.findAll();}
+    @Autowired
+    private EquipmentRepository equipmentRepository;
 
-    //public Loan add(Loan loan){
-    //    return loanRepository.save(loan);
-    //}
+    public List<Loan> getAll(){return loanRepository.findAll();}
 
     public Loan add(Loan loan) {
         List<Loan> existingLoans = loanRepository.findByEquipmentId(loan.getEquipmentId());
-        if (isOverlapping(loan.getDateAndTimeLoan(), loan.getDateAndTimeScheduleReturn(), existingLoans)) {
+        if (loan.getDateAndTimeLoan().isBefore(LocalDateTime.now())) {
+            throw new LoanException("Wrong reservation: Loans on past dates are not allowed.");
+        }
+        if (isOverlapping(loan.getDateAndTimeLoan(), loan.getDateAndTimeScheduleReturn(), existingLoans, loan.getEquipmentId())) {
             throw new LoanException("Conflicting reservation: overlapping times for the same equipment.");
+        }
+        if (!loan.getDateAndTimeLoan().toLocalDate().equals(loan.getDateAndTimeScheduleReturn().toLocalDate())) {
+            throw new LoanException("Wrong reservation: The repayment date must be the same day of the loan.");
+        }
+        if (loan.getDateAndTimeLoan().isAfter(loan.getDateAndTimeScheduleReturn())) {
+            throw new LoanException("Wrong reservation: The start date cannot be later than the return date.");
         }
         return loanRepository.save(loan);
     }
@@ -57,12 +65,14 @@ public class LoanService {
      * @param existingLoans All existing Loans
      * @return true if overlaps, false otherwhise
      */
-    private boolean isOverlapping(LocalDateTime newStart, LocalDateTime newEnd, List<Loan> existingLoans) {
+    private boolean isOverlapping(LocalDateTime newStart, LocalDateTime newEnd, List<Loan> existingLoans, String equipmentId) {
         for (Loan existing : existingLoans) {
             LocalDateTime existingStart = existing.getDateAndTimeLoan();
             LocalDateTime existingEnd = existing.getDateAndTimeScheduleReturn();
             boolean overlap = !newStart.isAfter(existingEnd) && !newEnd.isBefore(existingStart);
-            if (overlap) return true;
+            if (overlap) {
+                if (existing.getEquipmentId().equals(equipmentId)) return true;
+            }
         }
         return false;
     }
