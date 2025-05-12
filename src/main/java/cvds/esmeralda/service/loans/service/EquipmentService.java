@@ -38,4 +38,11 @@ public class EquipmentService {
     public void deleteById(String id){
         equipmentRepository.deleteById(id);
     }
+
+    public List<Equipment> getAvailableByType(String type) {
+        List<Equipment> allByType = equipmentRepository.findByType(type);
+        return allByType.stream()
+                .filter(Equipment::getAvailable)
+                .toList();
+    }
 }

@@ -129,4 +129,18 @@ public class EquipmentController {
         equipmentService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(
+            summary = "Get equipment by type filtering just availables",
+            description = "Retrieve all available equipment items filtered by a specific type (in header)"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Equipment list retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid equipment type"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/availablesType")
+    public List<Equipment> getAvailablesByType(@RequestHeader("equipment-type") String type) {
+        return equipmentService.getAvailableByType(type);
+    }
 }

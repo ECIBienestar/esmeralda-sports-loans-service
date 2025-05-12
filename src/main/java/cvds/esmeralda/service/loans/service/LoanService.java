@@ -76,4 +76,16 @@ public class LoanService {
         }
         return false;
     }
+
+    public List<Loan> getActiveLoansByUserId(String userId) {
+        return loanRepository.findByUserId(userId).stream()
+                .filter(loan -> "EN_PRESTAMO".equalsIgnoreCase(loan.getLoanStatus()))
+                .toList();
+    }
+
+    public List<Loan> getReturnedLoansByUserId(String userId) {
+        return loanRepository.findByUserId(userId).stream()
+                .filter(loan -> "ENTREGADO".equalsIgnoreCase(loan.getLoanStatus()))
+                .toList();
+    }
 }

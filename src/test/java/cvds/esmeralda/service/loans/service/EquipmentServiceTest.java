@@ -127,4 +127,53 @@ class EquipmentServiceTest {
 
         verify(equipmentRepository).deleteById("789");
     }
+
+    @Test
+    void testGetAvailableByType_withAvailableAndUnavailable() {
+        Equipment e1 = new Equipment();
+        e1.setType("laptop");
+        e1.setAvailable(true);
+
+        Equipment e2 = new Equipment();
+        e2.setType("laptop");
+        e2.setAvailable(false);
+
+        Equipment e3 = new Equipment();
+        e3.setType("laptop");
+        e3.setAvailable(true);
+
+        when(equipmentRepository.findByType("laptop")).thenReturn(List.of(e1, e2, e3));
+
+        List<Equipment> result = equipmentService.getAvailableByType("laptop");
+
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(Equipment::getAvailable));
+    }
+
+    @Test
+    void testGetAvailableByType_whenNoneAvailable() {
+        Equipment e1 = new Equipment();
+        e1.setType("projector");
+        e1.setAvailable(false);
+
+        Equipment e2 = new Equipment();
+        e2.setType("projector");
+        e2.setAvailable(false);
+
+        when(equipmentRepository.findByType("projector")).thenReturn(List.of(e1, e2));
+
+        List<Equipment> result = equipmentService.getAvailableByType("projector");
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testGetAvailableByType_whenNoEquipmentOfType() {
+        when(equipmentRepository.findByType("tablet")).thenReturn(List.of());
+
+        List<Equipment> result = equipmentService.getAvailableByType("tablet");
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
 }
