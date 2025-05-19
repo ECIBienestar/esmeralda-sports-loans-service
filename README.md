@@ -57,7 +57,6 @@ exposed through an **API Gateway** that manages authentication and request routi
 | **API Gateway**         | Routing and access control                         |
 | **Users Service**       | User consultation and validation                   |
 | **Estadistics Service** | Historical record and report generation            |
-| **Event Bus**           | Asynchronous events middleware (Kafka + Cloud Bus) |
 
 
 ###  🏗️ Arquitectonic Style
@@ -106,6 +105,26 @@ At a general level we have two main collections:
 - equipaments: Where the information of the items is saved.
 - Loans: There we find the details of the loans and in this the user is embedded who is in charge of making the loan, there is also a reference to the item to be reserved.
 
+### Sequence Diagrams
+
+#### Loan
+
+![](assets/CreateLoan.png)  
+![](assets/DeleteLoan.png)  
+![](assets/GetAllLoan.png)
+![](assets/GetLoanById.png)
+![](assets/UpdateLoan.png)
+
+
+#### Equipment
+
+![](assets/CreateEquipment.png)  
+![](assets/DeleteEquipment.png)  
+![](assets/GetAllEquipment.png)  
+![](assets/GetEquipmentByAvailability.png)  
+![](assets/GetEquipmentById.png)  
+![](assets/GetEquipmentByType.png)  
+![](assets/UpdateEquipment.png)
 
 ---
 ## 🗂️ Project Structure
