@@ -11,10 +11,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,35 +91,25 @@ public class LoanService {
                 .toList();
     }
 
-    public Set<String> getAllLoanedEquipmentTypes() {
-        List<Loan> loans = loanRepository.findAll();
-        Set<String> types = new HashSet<>();
-        for (Loan loan : loans) {
-            equipmentRepository.findById(loan.getEquipmentId())
-                    .map(Equipment::getType)
-                    .ifPresent(types::add);
-        }
-        return types;
+    public Map<String, Long> getAllLoanedEquipmentTypeCounts() {
+        return loanRepository.findAll().stream()
+                .map(loan -> equipmentRepository.findById(loan.getEquipmentId()).orElse(null))
+                .filter(equipment -> equipment != null && equipment.getType() != null)
+                .collect(Collectors.groupingBy(Equipment::getType, Collectors.counting()));
     }
 
-    public Set<String> getLoanedEquipmentTypesFromLastWeek() {
+    public Map<String, Long> getLoanedEquipmentTypeCountsFromLastWeek() {
         LocalDate today = LocalDate.now();
         LocalDate startOfLastWeek = today.minusWeeks(1).with(DayOfWeek.MONDAY);
         LocalDate endOfLastWeek = today.minusWeeks(1).with(DayOfWeek.SUNDAY);
 
-        List<Loan> lastWeekLoans = loanRepository.findAll().stream()
+        return loanRepository.findAll().stream()
                 .filter(loan -> {
                     LocalDate loanDate = loan.getDateAndTimeLoan().toLocalDate();
                     return !loanDate.isBefore(startOfLastWeek) && !loanDate.isAfter(endOfLastWeek);
                 })
-                .toList();
-
-        Set<String> types = new HashSet<>();
-        for (Loan loan : lastWeekLoans) {
-            equipmentRepository.findById(loan.getEquipmentId())
-                    .map(Equipment::getType)
-                    .ifPresent(types::add);
-        }
-        return types;
+                .map(loan -> equipmentRepository.findById(loan.getEquipmentId()).orElse(null))
+                .filter(equipment -> equipment != null && equipment.getType() != null)
+                .collect(Collectors.groupingBy(Equipment::getType, Collectors.counting()));
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -181,29 +182,28 @@ public class LoanController {
     }
 
     @Operation(
-            summary = "Get all equipment types in loans",
-            description = "Returns a list of equipment types that have been loaned"
+            summary = "Get equipment type counts in all loans",
+            description = "Returns a map of equipment types and how many times each has been loaned"
     )
     @GetMapping("/equipment-types")
-    public ResponseEntity<Set<String>> getAllLoanedEquipmentTypes() {
-        Set<String> types = loanService.getAllLoanedEquipmentTypes();
-        if (types.isEmpty()) {
+    public ResponseEntity<Map<String, Long>> getAllLoanedEquipmentTypeCounts() {
+        Map<String, Long> typeCounts = loanService.getAllLoanedEquipmentTypeCounts();
+        if (typeCounts.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(types);
+        return ResponseEntity.ok(typeCounts);
     }
 
     @Operation(
-            summary = "Get equipment types in loans from last week",
-            description = "Returns a list of equipment types that were loaned during the previous week"
+            summary = "Get equipment type counts from last week's loans",
+            description = "Returns a map of equipment types and how many times each was loaned during the previous week"
     )
     @GetMapping("/equipment-types/last-week")
-    public ResponseEntity<Set<String>> getLoanedEquipmentTypesFromLastWeek() {
-        Set<String> types = loanService.getLoanedEquipmentTypesFromLastWeek();
-        if (types.isEmpty()) {
+    public ResponseEntity<Map<String, Long>> getLoanedEquipmentTypeCountsFromLastWeek() {
+        Map<String, Long> typeCounts = loanService.getLoanedEquipmentTypeCountsFromLastWeek();
+        if (typeCounts.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(types);
+        return ResponseEntity.ok(typeCounts);
     }
-
 }
