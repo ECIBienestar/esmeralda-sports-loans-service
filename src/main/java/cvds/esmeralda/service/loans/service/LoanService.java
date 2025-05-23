@@ -93,10 +93,17 @@ public class LoanService {
 
     public Map<String, Long> getAllLoanedEquipmentTypeCounts() {
         return loanRepository.findAll().stream()
-                .map(loan -> equipmentRepository.findById(loan.getEquipmentId()).orElse(null))
+                .map(loan -> {
+                    String equipmentId = loan.getEquipmentId();
+                    if (equipmentId == null) {
+                        return null;
+                    }
+                    return equipmentRepository.findById(equipmentId).orElse(null);
+                })
                 .filter(equipment -> equipment != null && equipment.getType() != null)
                 .collect(Collectors.groupingBy(Equipment::getType, Collectors.counting()));
     }
+
 
     public Map<String, Long> getLoanedEquipmentTypeCountsFromLastWeek() {
         LocalDate today = LocalDate.now();
