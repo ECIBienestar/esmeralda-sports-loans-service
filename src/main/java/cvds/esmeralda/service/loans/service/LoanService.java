@@ -7,10 +7,14 @@ import cvds.esmeralda.service.loans.exception.LoanException;
 import cvds.esmeralda.service.loans.repository.EquipmentRepository;
 import cvds.esmeralda.service.loans.repository.LoanRepository;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,5 +91,37 @@ public class LoanService {
         return loanRepository.findByUserId(userId).stream()
                 .filter(loan -> "ENTREGADO".equalsIgnoreCase(loan.getLoanStatus()))
                 .toList();
+    }
+
+    public Set<String> getAllLoanedEquipmentTypes() {
+        List<Loan> loans = loanRepository.findAll();
+        Set<String> types = new HashSet<>();
+        for (Loan loan : loans) {
+            equipmentRepository.findById(loan.getEquipmentId())
+                    .map(Equipment::getType)
+                    .ifPresent(types::add);
+        }
+        return types;
+    }
+
+    public Set<String> getLoanedEquipmentTypesFromLastWeek() {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfLastWeek = today.minusWeeks(1).with(DayOfWeek.MONDAY);
+        LocalDate endOfLastWeek = today.minusWeeks(1).with(DayOfWeek.SUNDAY);
+
+        List<Loan> lastWeekLoans = loanRepository.findAll().stream()
+                .filter(loan -> {
+                    LocalDate loanDate = loan.getDateAndTimeLoan().toLocalDate();
+                    return !loanDate.isBefore(startOfLastWeek) && !loanDate.isAfter(endOfLastWeek);
+                })
+                .toList();
+
+        Set<String> types = new HashSet<>();
+        for (Loan loan : lastWeekLoans) {
+            equipmentRepository.findById(loan.getEquipmentId())
+                    .map(Equipment::getType)
+                    .ifPresent(types::add);
+        }
+        return types;
     }
 }

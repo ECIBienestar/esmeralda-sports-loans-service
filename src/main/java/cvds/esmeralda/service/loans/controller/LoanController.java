@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:5500", "http://localhost:5500"})
@@ -179,5 +180,30 @@ public class LoanController {
         return ResponseEntity.ok(loans);
     }
 
+    @Operation(
+            summary = "Get all equipment types in loans",
+            description = "Returns a list of equipment types that have been loaned"
+    )
+    @GetMapping("/equipment-types")
+    public ResponseEntity<Set<String>> getAllLoanedEquipmentTypes() {
+        Set<String> types = loanService.getAllLoanedEquipmentTypes();
+        if (types.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(types);
+    }
+
+    @Operation(
+            summary = "Get equipment types in loans from last week",
+            description = "Returns a list of equipment types that were loaned during the previous week"
+    )
+    @GetMapping("/equipment-types/last-week")
+    public ResponseEntity<Set<String>> getLoanedEquipmentTypesFromLastWeek() {
+        Set<String> types = loanService.getLoanedEquipmentTypesFromLastWeek();
+        if (types.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(types);
+    }
 
 }
