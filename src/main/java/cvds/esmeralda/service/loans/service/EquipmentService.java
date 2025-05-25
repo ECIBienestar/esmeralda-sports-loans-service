@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EquipmentService {
@@ -44,5 +46,11 @@ public class EquipmentService {
         return allByType.stream()
                 .filter(Equipment::getAvailable)
                 .toList();
+    }
+
+    public Map<String, Long> getAllEquipmentTypeCounts() {
+        return equipmentRepository.findAll().stream()
+                .filter(equipment -> equipment.getType() != null)
+                .collect(Collectors.groupingBy(Equipment::getType, Collectors.counting()));
     }
 }

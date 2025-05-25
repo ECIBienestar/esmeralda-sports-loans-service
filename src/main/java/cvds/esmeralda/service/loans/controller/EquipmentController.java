@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000","http://127.0.0.1:5500","http://localhost:5500"})
@@ -142,5 +143,19 @@ public class EquipmentController {
     @GetMapping("/availablesType")
     public List<Equipment> getAvailablesByType(@RequestHeader("equipment-type") String type) {
         return equipmentService.getAvailableByType(type);
+    }
+
+    @Operation(
+            summary = "Get total equipment counts by type",
+            description = "Retrieve the total number of equipment items grouped by type"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Equipment type counts retrieved successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/typeCounts")
+    public ResponseEntity<Map<String, Long>> getAllEquipmentTypeCounts() {
+        Map<String, Long> typeCounts = equipmentService.getAllEquipmentTypeCounts();
+        return ResponseEntity.ok(typeCounts);
     }
 }
