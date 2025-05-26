@@ -4,6 +4,7 @@ import cvds.esmeralda.service.loans.entity.loan.Loan;
 import cvds.esmeralda.service.loans.service.LoanService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -14,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+@SecurityRequirement(name = "basicAuth")
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:5500", "http://localhost:5500"})
 @RequestMapping("/api/v1.0/loans")
